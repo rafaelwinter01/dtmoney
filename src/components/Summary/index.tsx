@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useTransactions } from '../../hooks/useTransactions'
 import { Container } from "./styles"
 
@@ -5,8 +6,10 @@ import incomeImg from '../../assets/income.svg'
 import outcomeImg from '../../assets/outcome.svg'
 import totalImg from '../../assets/total.svg'
 
+
 export function Summary () {
     const {transactions} = useTransactions();
+    const [negative, setNegative] = useState(false)
 
     const summary = transactions.reduce((acc, transaction) => {
         if (transaction.type === 'deposit') {
@@ -23,8 +26,16 @@ export function Summary () {
         total: 0
     })
 
+    useEffect(() => {
+        if(summary.total < 0) {
+            setNegative(true)
+        } else {
+            setNegative(false)
+        }
+    }, [summary.total])
+
     return (
-        <Container>
+        <Container isNegative={negative}>
             <div>
                 <header>
                     <p>Entradas</p>
